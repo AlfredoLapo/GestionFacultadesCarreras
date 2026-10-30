@@ -31,6 +31,9 @@ namespace GestionFacultadesCarreras.Migrations
                     b.Property<int>("DuracionSemestres")
                         .HasColumnType("int");
 
+                    b.Property<int?>("FacultadId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Modulacion")
                         .IsRequired()
                         .HasMaxLength(50)
@@ -43,7 +46,43 @@ namespace GestionFacultadesCarreras.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("FacultadId");
+
                     b.ToTable("Carrera");
+                });
+
+            modelBuilder.Entity("GestionFacultadesCarreras.Models.Facultad", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Nombre")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
+
+                    b.Property<string>("Telefono_Contacto")
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Facultad");
+                });
+
+            modelBuilder.Entity("GestionFacultadesCarreras.Models.Carrera", b =>
+                {
+                    b.HasOne("GestionFacultadesCarreras.Models.Facultad", null)
+                        .WithMany("Carreras")
+                        .HasForeignKey("FacultadId");
+                });
+
+            modelBuilder.Entity("GestionFacultadesCarreras.Models.Facultad", b =>
+                {
+                    b.Navigation("Carreras");
                 });
 #pragma warning restore 612, 618
         }
