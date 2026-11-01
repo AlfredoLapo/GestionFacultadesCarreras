@@ -20,5 +20,8 @@ namespace GestionFacultadesCarreras.Models
         [StringLength(50, ErrorMessage = "La modulación no puede exceder los 50 caracteres.")]
         [Display(Name = "Modulación")]
         public string Modulacion { get; set; } = string.Empty;
+
+        public int FacultadId { get; set; }
+        public Facultad? Facultad { get; set; }
     }
 }

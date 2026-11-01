@@ -31,7 +31,7 @@ namespace GestionFacultadesCarreras.Migrations
                     b.Property<int>("DuracionSemestres")
                         .HasColumnType("int");
 
-                    b.Property<int?>("FacultadId")
+                    b.Property<int>("FacultadId")
                         .HasColumnType("int");
 
                     b.Property<string>("Modulacion")
@@ -75,9 +75,13 @@ namespace GestionFacultadesCarreras.Migrations
 
             modelBuilder.Entity("GestionFacultadesCarreras.Models.Carrera", b =>
                 {
-                    b.HasOne("GestionFacultadesCarreras.Models.Facultad", null)
+                    b.HasOne("GestionFacultadesCarreras.Models.Facultad", "Facultad")
                         .WithMany("Carreras")
-                        .HasForeignKey("FacultadId");
+                        .HasForeignKey("FacultadId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Facultad");
                 });
 
             modelBuilder.Entity("GestionFacultadesCarreras.Models.Facultad", b =>
