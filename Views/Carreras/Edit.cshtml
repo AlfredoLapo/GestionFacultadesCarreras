@@ -28,16 +28,18 @@
                 <input asp-for="Modulacion" class="form-control" />
                 <span asp-validation-for="Modulacion" class="text-danger"></span>
             </div>
+
             <div class="form-group">
-                <label asp-for="FacultadId" class="control-label"></label>
-                <input asp-for="FacultadId" class="form-control" />
-                <span asp-validation-for="FacultadId" class="text-danger"></span>
+                <label asp-for="FacultadId" class="control-label">Facultad</label>
+                <select asp-for="FacultadId"
+                        class="form-control"
+                        asp-items="ViewBag.FacultadId">
+                    <option value="">-- Seleccione una facultad --</option>
+                </select>
+                <span asp-validation-for="FacultadId"
+                      class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="Facultad" class="control-label"></label>
-                <input asp-for="Facultad" class="form-control" />
-                <span asp-validation-for="Facultad" class="text-danger"></span>
-            </div>
+
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
             </div>

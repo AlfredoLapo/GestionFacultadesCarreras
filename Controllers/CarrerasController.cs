@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using GestionFacultadesCarreras.Models;
-
+using Microsoft.AspNetCore.Mvc.Rendering;
 public class CarrerasController : Controller
 {
     private readonly GestionFacultadesCarrerasContext _context;
@@ -13,10 +13,16 @@ public class CarrerasController : Controller
     }
 
     // GET: CARRERAS
-    public async Task<IActionResult> Index()    
+
+    public async Task<IActionResult> Index()
     {
-        return View(await _context.Carrera.ToListAsync());
+        var carreras = await _context.Carrera
+            .Include(c => c.Facultad)
+            .ToListAsync();
+
+        return View(carreras);
     }
+
 
     // GET: CARRERAS/Details/5
     public async Task<IActionResult> Details(int? id)
@@ -26,8 +32,11 @@ public class CarrerasController : Controller
             return NotFound();
         }
 
+
         var carrera = await _context.Carrera
+            .Include(c => c.Facultad)
             .FirstOrDefaultAsync(m => m.Id == id);
+
         if (carrera == null)
         {
             return NotFound();
@@ -39,15 +48,22 @@ public class CarrerasController : Controller
     // GET: CARRERAS/Create
     public IActionResult Create()
     {
+        ViewData["FacultadId"] = new SelectList(
+            _context.Set<Facultad>(),
+            "Id",
+            "Nombre"
+        );
+
         return View();
     }
 
     // POST: CARRERAS/Create
     // To protect from overposting attacks, enable the specific properties you want to bind to.
     // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create([Bind("Id,Nombre,DuracionSemestres,Modulacion,FacultadId,Facultad")] Carrera carrera)
+    public async Task<IActionResult> Create([Bind("Id,Nombre,DuracionSemestres,Modulacion,FacultadId")] Carrera carrera)
     {
         if (ModelState.IsValid)
         {
@@ -55,10 +71,20 @@ public class CarrerasController : Controller
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
+
+        ViewData["FacultadId"] = new SelectList(
+            _context.Set<Facultad>(),
+            "Id",
+            "Nombre",
+            carrera.FacultadId
+        );
+
         return View(carrera);
     }
 
+
     // GET: CARRERAS/Edit/5
+
     public async Task<IActionResult> Edit(int? id)
     {
         if (id == null)
@@ -67,19 +93,30 @@ public class CarrerasController : Controller
         }
 
         var carrera = await _context.Carrera.FindAsync(id);
+
         if (carrera == null)
         {
             return NotFound();
         }
+
+        ViewData["FacultadId"] = new SelectList(
+            _context.Set<Facultad>(),
+            "Id",
+            "Nombre",
+            carrera.FacultadId
+        );
+
         return View(carrera);
     }
+
 
     // POST: CARRERAS/Edit/5
     // To protect from overposting attacks, enable the specific properties you want to bind to.
     // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Edit(int? id, [Bind("Id,Nombre,DuracionSemestres,Modulacion,FacultadId,Facultad")] Carrera carrera)
+    public async Task<IActionResult> Edit(int? id, [Bind("Id,Nombre,DuracionSemestres,Modulacion,FacultadId")] Carrera carrera)
     {
         if (id != carrera.Id)
         {
@@ -104,10 +141,20 @@ public class CarrerasController : Controller
                     throw;
                 }
             }
+
             return RedirectToAction(nameof(Index));
         }
+
+        ViewData["FacultadId"] = new SelectList(
+            _context.Set<Facultad>(),
+            "Id",
+            "Nombre",
+            carrera.FacultadId
+        );
+
         return View(carrera);
     }
+
 
     // GET: CARRERAS/Delete/5
     public async Task<IActionResult> Delete(int? id)
@@ -117,8 +164,11 @@ public class CarrerasController : Controller
             return NotFound();
         }
 
+
         var carrera = await _context.Carrera
+            .Include(c => c.Facultad)
             .FirstOrDefaultAsync(m => m.Id == id);
+
         if (carrera == null)
         {
             return NotFound();
